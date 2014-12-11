@@ -91,8 +91,6 @@ public class CreateTask extends Activity {
         for(String link : links) {
             LinearLayout linkRow = new LinearLayout(myApp);
             LinearLayout.LayoutParams linkRowParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//            linkRowParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-//            linkRowParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             linkRow.setOrientation(LinearLayout.HORIZONTAL);
             linkRowParams.setMargins(dipToPixels(myApp, 11f), 0, dipToPixels(myApp, 10f), 0);
             linkRow.setLayoutParams(linkRowParams);
@@ -123,14 +121,6 @@ public class CreateTask extends Activity {
             linkList.addView(linkRow);
             linkEdit.setText("");
             counter++;
-
-//            android:layout_width="0dip"
-//            android:layout_weight=".2"
-//            android:layout_height="wrap_content"
-//            android:text="Add Link"
-
-
-
         }
     }
 
