@@ -2,17 +2,27 @@ package com.tylerbgeorge.taskreminder.ui;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.tylerbgeorge.taskreminder.R;
@@ -20,6 +30,8 @@ import com.tylerbgeorge.taskreminder.database.DatabaseHandler;
 import com.tylerbgeorge.taskreminder.database.Task;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,8 +44,13 @@ public class CreateTask extends Activity {
     EditText taskDesc;
     EditText linkEdit;
     LinearLayout linkList;
+    ScrollView linkScroll;
     Button addLink;
+    static Button pickDate;
+    static Button pickTime;
     Button createTask;
+
+    static 
 
     private final List<String> links = new ArrayList<String>();
 
@@ -51,6 +68,9 @@ public class CreateTask extends Activity {
         linkEdit = (EditText) findViewById(R.id.link_edit);
         addLink = (Button) findViewById(R.id.add_link);
         linkList = (LinearLayout) findViewById(R.id.link_list);
+        linkScroll = (ScrollView) findViewById(R.id.link_list_scroll);
+        pickDate = (Button) findViewById(R.id.pick_date);
+        pickTime = (Button) findViewById(R.id.pick_time);
 
 
         addLink.setOnClickListener(new View.OnClickListener() {
@@ -82,9 +102,29 @@ public class CreateTask extends Activity {
                 }
             }
         });
+
+        pickDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog(v);
+            }
+        });
+
+        pickTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog(v);
+            }
+        });
     }
 
     private void reloadLinks() {
+
+        if(links.size() > 3)
+            linkScroll.getLayoutParams().height = dipToPixels(myApp, 150f);
+        else
+            linkScroll.getLayoutParams().height = ScrollView.LayoutParams.WRAP_CONTENT;
+
         linkList.removeAllViews();
 
         int counter = 0;
@@ -127,5 +167,69 @@ public class CreateTask extends Activity {
     public static int dipToPixels(Context context, float dipValue) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
+            Time today = new Time();
+            today.setToNow();
+            datePickerDialog.getDatePicker().setMinDate(today.toMillis(true));
+
+            return datePickerDialog;
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            updateDateButtonText(month + "/" + day + "/" + year);
+        }
+
+
+    }
+
+    public static void updateDateButtonText(String date) {
+        pickDate.setText(date);
+    }
+
+    public static void updateTimeButtonText(String time) {
+        pickTime.setText(time);
+    }
+    public static class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            updateTimeButtonText(hourOfDay + ":" + minute);
+        }
+    }
+
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getFragmentManager(), "timePicker");
     }
 }

@@ -25,11 +25,12 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="50dip">
+        android:layout_height="100dip">
         <LinearLayout
+            android:id="@+id/display_link_list"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
-
 
         </LinearLayout>
     </ScrollView>
