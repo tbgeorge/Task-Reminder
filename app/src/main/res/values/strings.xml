@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Task Reminder</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="task_name">Enter a Task Name</string>
+    <string name="task_desc">Enter a Task Description</string>
+    <string name="create_new_task">Create a new Task</string>
+    <string name="create_task">Create Task</string>
+
+</resources>
